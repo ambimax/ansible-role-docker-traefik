@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  vars:
+    docker_install: true
+
+  pre_tasks:
+    - name: Install curl
+      apt:
+        pkg: curl
+        update_cache: true
+
+  roles:
+    - tschifftner.docker

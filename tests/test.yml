@@ -1,0 +1,10 @@
+---
+- hosts: all
+  remote_user: root
+
+  vars:
+    traefik_docker_domain: localhost.local
+    traefik_acme_email: travis@example.com
+
+  roles:
+    - role_under_test
