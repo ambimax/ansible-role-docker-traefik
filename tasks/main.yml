@@ -1,0 +1,65 @@
+---
+- name: Ensures traefik dir exists
+  file:
+    path: "{{ traefik_dir }}"
+    state: directory
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+
+- name: 'Check acme.json exists'
+  register: _docker_acme
+  stat:
+    path: '{{ traefik_dir }}/acme.json'
+
+- name: Ensures acme.json file exists
+  file:
+    path: "{{ traefik_dir }}/acme.json"
+    state: touch
+    mode: 0600
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+  when: _docker_acme.stat is not defined or _docker_acme.stat.exists == false
+
+- name: Adding traefik.toml file
+  template:
+    src: traefik.toml
+    dest: "{{ traefik_dir }}/traefik.toml"
+    mode: 0600
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+
+- name: Run traefik proxy
+  docker_container:
+    hostname: traefik
+    image: "{{ traefik_image }}"
+    labels:
+      traefik.backend: traefik
+      traefik.frontend.rule: "Host:{{ traefik_hostname }}"
+      traefik.port: "8080"
+    name: traefik
+#    pull: true
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+#    recreate: true
+    restart_policy: always
+    state: "{{ traefik_state }}"
+    volumes: '{{ traefik_default_volumes }} + {{ traefik_volumes }}'
+    command: --web \
+      --docker \
+      --docker.swarmmode \
+      --docker.domain={{ traefik_docker_domain }} \
+      --docker.watch \
+      --logLevel=DEBUG
+
+- name: Create network
+  docker_network:
+    appends: true
+    driver: bridge
+    name: "{{ item }}"
+    connected: traefik
+    state: present
+  with_items: "{{ traefik_networks }}"
+  ignore_errors: true
+  changed_when: false
