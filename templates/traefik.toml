@@ -31,6 +31,8 @@ address = ":8080"
 users = [{% for user in traefik_users_basic_auth %}"{{ user }}"{% if not loop.last %}, {% endif %}{% endfor %}]
 {% endif %}
 
+{{ traefik_entrypoints }}
+
 {% if traefik_https %}
 [acme]
 
@@ -55,18 +57,111 @@ sans = [{% for san in domain.sans %}"{{ san }}"{% if not loop.last %}, {% endif 
 {% endfor %}
 {% endif %}
 
+################################################################
+# Docker Provider
+################################################################
+
+# Enable Docker Provider.
 [docker]
-domain = "{{ traefik_docker_domain }}"
+
+# Docker server endpoint. Can be a tcp or a unix socket endpoint.
+#
+# Required
+#
 endpoint = "unix:///var/run/docker.sock"
-exposedByDefault = false
+
+# Default base domain used for the frontend rules.
+# Can be overridden by setting the "traefik.domain" label on a container.
+#
+# Optional
+#
+domain = "{{ traefik_docker_domain }}"
+
+# Enable watch docker changes.
+#
+# Optional
+#
 watch = true
 
-[traefikLog]
-filePath = "/var/log/traefik/traefik.log"
+# Override default configuration template.
+# For advanced users :)
+#
+# Optional
+#
+# filename = "docker.tmpl"
 
-[accessLog]
-filepath = "/var/log/traefik/access.log"
+# Override template version
+# For advanced users :)
+#
+# Optional
+# - "1": previous template version (must be used only with older custom templates, see "filename")
+# - "2": current template version (must be used to force template version when "filename" is used)
+#
+# templateVersion = 2
 
+# Expose containers by default in Traefik.
+# If set to false, containers that don't have `traefik.enable=true` will be ignored.
+#
+# Optional
+# Default: true
+#
+exposedByDefault = true
+
+# Use the IP address from the binded port instead of the inner network one.
+#
+# In case no IP address is attached to the binded port (or in case
+# there is no bind), the inner network one will be used as a fallback.
+#
+# Optional
+# Default: false
+#
+usebindportip = false
+
+# Use Swarm Mode services as data provider.
+#
+# Optional
+# Default: false
+#
+swarmMode = true
+
+# Polling interval (in seconds) for Swarm Mode.
+#
+# Optional
+# Default: 15
+#
+swarmModeRefreshSeconds = 15
+
+#[traefikLog]
+#filePath = "/var/log/traefik/traefik.log"
+#
+#[accessLog]
+#filepath = "/var/log/traefik/access.log"
+
+# API definition
+# Warning: Enabling API will expose Traefik's configuration.
+# It is not recommended in production,
+# unless secured by authentication and authorizations
 [api]
+# Name of the related entry point
+#
+# Optional
+# Default: "traefik"
+#
 entryPoint = "traefik"
+
+# Enable Dashboard
+#
+# Optional
+# Default: true
+#
 dashboard = true
+
+# Enable debug mode.
+# This will install HTTP handlers to expose Go expvars under /debug/vars and
+# pprof profiling data under /debug/pprof/.
+# Additionally, the log level will be set to DEBUG.
+#
+# Optional
+# Default: false
+#
+debug = true

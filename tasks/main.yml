@@ -39,17 +39,16 @@
     hostname: traefik
     image: "{{ traefik_image }}"
     labels:
-      traefik.backend: traefik
+      traefik.backend: "{{ traefik_container_name }}"
+      traefik.enable: "true"
       traefik.frontend.rule: "Host:{{ traefik_hostname }}"
       traefik.port: "8080"
-    name: traefik
-#    pull: true
-    ports:
-      - "80:80"
-      - "443:443"
-      - "8080:8080"
-#    recreate: true
-    restart_policy: always
+    name: '{{ traefik_container_name }}'
+    networks: "{{ traefik_networks }}"
+    publish: '{{ traefik_publish }}'
+    restart_policy: any
+    restart_policy_attempts: 5
+    restart_policy_window: 30
     state: "{{ traefik_state }}"
     volumes: '{{ traefik_default_volumes }} + {{ traefik_volumes }}'
     command: --web \
