@@ -3,6 +3,8 @@
 traefik_user: root
 traefik_group: docker
 traefik_docker_domain: docker.localhost
+traefik_docker_endpoint: unix://var/run/docker.sock
+traefik_swarm_mode: "true"
 
 traefik_auth_users: []
 traefik_certificates: []
@@ -47,3 +49,5 @@ traefik_publish:
   - published_port: 8080
     target_port: 8080
     protocol: tcp
+
+traefik_entrypoints: ''
