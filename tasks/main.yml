@@ -28,6 +28,12 @@
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
 
+- name: Restart service docker to do next steps
+  service:
+    name: docker
+    state: restarted
+  changed_when: false # fix idempotence
+
 - name: Run traefik proxy
   docker_container:
     hostname: traefik
