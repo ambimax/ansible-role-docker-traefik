@@ -7,6 +7,7 @@
     docker_install: true
     docker_compose_install: true
     docker_machine_install: true
+    docker_swarm_init: true
 
   roles:
     - ambimax.docker
