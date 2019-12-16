@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  remote_user: root
+
+  pre_tasks:
+    - name: Install dependencies
+      apt:
+        pkg:
+        - curl
+        - git
+        update_cache: true
