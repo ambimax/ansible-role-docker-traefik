@@ -6,9 +6,11 @@
     docker_install: true
 
   pre_tasks:
-    - name: Install curl
+    - name: Install dependencies
       apt:
-        pkg: curl
+        pkg:
+        - curl
+        - git
         update_cache: true
 
   roles:
