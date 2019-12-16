@@ -3,6 +3,11 @@
   remote_user: root
 
   vars:
+    #docker
+    docker_install: true
+    docker_compose_install: true
+    docker_machine_install: true
+
     traefik_docker_domain: localhost.local
     traefik_acme_email: travis@example.com
 
