@@ -50,21 +50,5 @@
     restart_policy_attempts: 5
     restart_policy_window: 30
     state: "{{ traefik_state }}"
-    volumes: '{{ traefik_default_volumes }} + {{ traefik_volumes }}'
-    command: --web \
-      --docker \
-      --docker.swarmmode \
-      --docker.domain={{ traefik_docker_domain }} \
-      --docker.watch \
-      --logLevel=DEBUG
-
-- name: Create network
-  docker_network:
-    appends: true
-    driver: bridge
-    name: "{{ item }}"
-    connected: traefik
-    state: present
-  with_items: "{{ traefik_networks }}"
-  ignore_errors: true
-  changed_when: false
+    mounts: '{{ traefik_default_volumes }} + {{ traefik_volumes }}'
+    user: null # fix for permission issues in ansible
