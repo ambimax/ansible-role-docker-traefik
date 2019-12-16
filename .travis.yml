@@ -33,6 +33,7 @@ script:
 
 after_failure:
   - ${DOCKER} curl localhost:8080
+  - ${DOCKER} cat /etc/traefik/traefik.toml
 
 
 notifications:
