@@ -2,7 +2,7 @@
 
 traefik_user: root
 traefik_group: docker
-traefik_docker_domain: docker.localhost
+traefik_docker_domain: localhost
 traefik_docker_endpoint: unix://var/run/docker.sock
 traefik_swarm_mode: "true"
 
@@ -18,7 +18,7 @@ traefik_log_level: ERROR
 traefik_networks:
   - traefik
 traefik_onhostrule: true
-traefik_state: present
+traefik_state: started
 
 traefik_volumes: []
 traefik_users_basic_auth: []
