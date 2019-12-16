@@ -7,4 +7,5 @@
     traefik_acme_email: travis@example.com
 
   roles:
+    - ambimax.docker
     - role_under_test

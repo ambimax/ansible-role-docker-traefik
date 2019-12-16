@@ -12,6 +12,3 @@
         - curl
         - git
         update_cache: true
-
-  roles:
-    - ambimax.docker
