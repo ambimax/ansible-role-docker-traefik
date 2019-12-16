@@ -52,3 +52,4 @@
     state: "{{ traefik_state }}"
     mounts: '{{ traefik_default_volumes }} + {{ traefik_volumes }}'
     user: null # fix for permission issues in ansible
+    no_log: false
