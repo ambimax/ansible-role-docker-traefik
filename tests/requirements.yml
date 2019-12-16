@@ -1,2 +1,3 @@
 ---
-- src: tschifftner.docker
+- src: https://github.com/ambimax/ansible-role-docker
+  name: ambimax.docker
