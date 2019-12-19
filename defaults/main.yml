@@ -17,6 +17,7 @@ traefik_image: traefik:1.7
 traefik_log_level: ERROR
 traefik_networks:
   - traefik
+traefik_network_scope: swarm
 traefik_onhostrule: true
 traefik_state: started
 
