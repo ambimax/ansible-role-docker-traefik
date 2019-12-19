@@ -64,7 +64,9 @@
     appends: true
     driver: bridge
     name: "{{ item }}"
+    attachable: true
     connected: traefik
+    scope: "{{ traefik_network_scope }}"
     state: present
   with_items: "{{ traefik_networks }}"
   ignore_errors: true
