@@ -26,6 +26,7 @@ traefik_hostname: "traefik.{{ traefik_docker_domain }}"
 traefik_https: true
 traefik_https_redirect: true
 traefik_image: traefik:2.1
+traefik_container_name: traefik
 traefik_log_level: ERROR
 traefik_log_file: ""
 traefik_access_log_file: ""
