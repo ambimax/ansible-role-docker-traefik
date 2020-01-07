@@ -59,12 +59,10 @@
       traefik.frontend.rule: "Host:{{ traefik_hostname }}"
       traefik.port: "8080"
     name: "{{traefik_container_name}}"
-#    pull: true
     ports:
       - "80:80"
       - "443:443"
       - "8080:8080"
-    recreate: true
     restart_policy: always
     state: "{{ traefik_state }}"
     volumes: '{{ traefik_default_volumes }} + {{ traefik_volumes }}'
