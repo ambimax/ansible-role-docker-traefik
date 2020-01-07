@@ -1,0 +1,122 @@
+defaultEntryPoints: ["http"{% if traefik_https %}, "https"{% endif %}]
+
+entryPoints:
+  http:
+    address: ":80"
+
+{% if traefik_https %}
+  https:
+    address: ":443"
+{% endif %}
+
+#############
+# Dashboard #
+#############
+
+  traefik:
+    address: ":8080"
+{% if traefik_users_basic_auth | length %}
+    auth:
+      basic:
+        users: [{% for user in traefik_users_basic_auth %}"{{ user }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+{% endif %}
+
+
+######################
+# https certificates #
+######################
+
+{% if traefik_https %}
+tls:
+  certificates:
+{% for cert in traefik_certificates %}
+    - certFile = "{{ cert.CertFile }}"
+      keyFile = "{{ cert.KeyFile }}"
+{% endfor %}
+{% endif %}
+
+
+{% if traefik_https and traefik_https_redirect %}
+# http:
+#   middlewares:
+#     https-redirect:
+#       redirectscheme:
+#         scheme: "https"
+{% endif %}
+
+
+#################
+# Let's Encrypt #
+#################
+
+{% if traefik_https %}
+certificatesResolvers:
+  le:
+    acme:
+      email: "{{ traefik_acme_email }}"
+      storage: "{{ traefik_acme_storage }}"
+{% if traefik_onhostrule %}
+      # onHostRule: true
+{% endif %}
+      httpChallenge:
+        entryPoint: http
+{% if traefik_acme_staging %}
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+{% endif %}
+#       domains:
+# {% for domain in traefik_acme_domains %}
+#         - main: "{{ domain.domain }}"
+# {% if domain.sans is defined and domain.sans | length %}
+#           sans: [{% for san in domain.sans %}"{{ san }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+# {% endif %}
+# {% endfor %}
+{% endif %}
+
+
+
+##########
+# Docker #
+##########
+
+providers:
+  docker:
+    endpoint: "{{traefik_docker_endpoint}}"
+    exposedByDefault: false
+    watch: true
+    network: "{{ traefik_networks[0] }}"
+
+{% if traefik_docker_enable_swarmmode %}
+    swarmmode: true
+    swarmModeRefreshSeconds: {{traefik_docker_swarmmode_refreshseconds}}
+{% endif %}
+
+
+###########
+# Logging #
+###########
+
+logLevel: "{{ traefik_log_level }}"
+debug: {{ traefik_debug | lower }}
+
+{% if traefik_log_file | length > 0 %}
+log:
+  filePath: "{{ traefik_log_file }}"
+{% else %}
+log: {}
+{% endif %}
+
+{% if traefik_access_log_file | length > 0 %}
+accessLog:
+  filePath: "{{ traefik_access_log_file }}"
+{% else %}
+accessLog: {}
+{% endif %}
+
+
+#######
+# Api #
+#######
+
+api:
+  insecure: true
+  dashboard: true
