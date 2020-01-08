@@ -5,7 +5,7 @@
   vars:
     traefik_docker_domain: localhost
     traefik_hostname: localhost
-    traefik_https: false
+    traefik_acme_email: travis@example.com
 
   roles:
     - role_under_test
