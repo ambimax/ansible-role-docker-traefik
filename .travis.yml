@@ -29,9 +29,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check versions
-  - ${DOCKER} curl localhost/dashboard/
-  - ${DOCKER} curl localhost
-  - ${DOCKER} curl localhost:8080
+  - ${DOCKER} curl localhost/dashboard/ | grep Traefik
 
 
 after_failure:
