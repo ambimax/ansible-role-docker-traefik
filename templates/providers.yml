@@ -1,0 +1,45 @@
+http:
+  routers:
+{% if traefik_https %}
+    api:
+      rule: Host(`{{ traefik_hostname }}`)
+      service: api@internal
+      entryPoints: [http]
+      middlewares:
+        - https-redirect
+
+    api-secure:
+{% else %}
+    api:
+{% endif %}
+      rule: Host(`{{ traefik_hostname }}`)
+{% if traefik_https %}
+      tls:
+        certResolver: le
+{% endif %}
+      service: api@internal
+{% if traefik_https %}
+      entryPoints: [https]
+{% else %}
+      entryPoints: [http]
+{% endif %}
+{% if traefik_users_basic_auth is defined and (traefik_users_basic_auth | length > 0) %}
+      middlewares:
+        - auth
+{% endif %}
+
+  middlewares:
+{% if traefik_https %}
+    https-redirect:
+      redirectScheme:
+        scheme: https
+{% endif %}
+
+{% if traefik_users_basic_auth is defined and (traefik_users_basic_auth | length > 0) %}
+    auth:
+      basicAuth:
+        users:
+{% for user in traefik_users_basic_auth %}
+          - "{{ user }}"
+{% endfor %}
+{% endif %}

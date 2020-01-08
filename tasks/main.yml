@@ -20,13 +20,37 @@
     group: "{{ traefik_group }}"
   when: _docker_acme.stat is not defined or _docker_acme.stat.exists == false
 
-- name: Adding traefik.toml file
+- name: 'Check hostname file exists'
+  register: _docker_hostname
+  stat:
+    path: '{{ traefik_dir }}/hostname'
+
+- name: Ensures hostname file exists
+  copy:
+    dest: "{{ traefik_dir }}/hostname"
+    content: "{{ traefik_docker_domain }}"
+  when: _docker_hostname.stat is not defined or _docker_hostname.stat.exists == false
+
+- name: Adding traefik.yml file
   template:
-    src: traefik.toml
-    dest: "{{ traefik_dir }}/traefik.toml"
+    src: traefik.yml
+    dest: "{{ traefik_dir }}/traefik.yml"
     mode: 0600
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
+
+- name: Adding providers.yml file
+  template:
+    src: providers.yml
+    dest: "{{ traefik_dir }}/providers.yml"
+    mode: 0600
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+
+- name: Remove old traefik.toml file
+  file:
+    path: "{{ traefik_dir }}/traefik.toml"
+    state: absent
 
 - name: Restart service docker to do next steps
   service:
@@ -38,31 +62,19 @@
   docker_container:
     hostname: traefik
     image: "{{ traefik_image }}"
-    labels:
-      traefik.backend: traefik
-      traefik.frontend.rule: "Host:{{ traefik_hostname }}"
-      traefik.port: "8080"
-    name: traefik
-#    pull: true
+    name: "{{traefik_container_name}}"
     ports:
       - "80:80"
       - "443:443"
       - "8080:8080"
-#    recreate: true
     restart_policy: always
     state: "{{ traefik_state }}"
     volumes: '{{ traefik_default_volumes }} + {{ traefik_volumes }}'
-    command: --web \
-      --docker \
-      --docker.swarmmode \
-      --docker.domain={{ traefik_docker_domain }} \
-      --docker.watch \
-      --logLevel=DEBUG
 
 - name: Create network
   docker_network:
     appends: true
-    driver: bridge
+    driver: overlay
     name: "{{ item }}"
     attachable: true
     connected: traefik

@@ -29,12 +29,14 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check versions
-  - ${DOCKER} curl localhost:8080/dashboard/ | grep 'Traefik'
+  - ${DOCKER} curl localhost/dashboard/ | grep "Traefik UI"
 
 
 after_failure:
+  - ${DOCKER} curl localhost
   - ${DOCKER} curl localhost:8080
-  - ${DOCKER} cat /etc/traefik/traefik.toml
+  - ${DOCKER} cat /etc/traefik/traefik.yml
+  - ${DOCKER} cat /etc/traefik/providers.yml
 
 
 notifications:

@@ -1,0 +1,97 @@
+defaultEntryPoints: ["http"{% if traefik_https %}, "https"{% endif %}]
+
+entryPoints:
+  http:
+    address: ":80"
+
+{% if traefik_https %}
+  https:
+    address: ":443"
+{% endif %}
+
+
+######################
+# https certificates #
+######################
+
+{% if traefik_https %}
+tls:
+  certificates:
+{% for cert in traefik_certificates %}
+    - certFile = "{{ cert.CertFile }}"
+      keyFile = "{{ cert.KeyFile }}"
+{% endfor %}
+{% endif %}
+
+
+#################
+# Let's Encrypt #
+#################
+
+{% if traefik_https %}
+certificatesResolvers:
+  le:
+    acme:
+      email: "{{ traefik_acme_email }}"
+      storage: "{{ traefik_acme_storage }}"
+      httpChallenge:
+        entryPoint: http
+{% if traefik_acme_staging %}
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+{% endif %}
+{% endif %}
+
+
+
+##########
+# Docker #
+##########
+
+providers:
+  docker:
+    endpoint: "{{traefik_docker_endpoint}}"
+    exposedByDefault: false
+    watch: true
+    network: "{{ traefik_networks[0] }}"
+
+{% if traefik_docker_enable_swarmmode %}
+    swarmmode: true
+    swarmModeRefreshSeconds: {{traefik_docker_swarmmode_refreshseconds}}
+{% endif %}
+
+  file:
+    filename: "{{ traefik_dir }}/providers.yml"
+
+
+###########
+# Logging #
+###########
+
+logLevel: "{{ traefik_log_level }}"
+debug: {{ traefik_debug | lower }}
+
+{% if traefik_enable_log %}
+{% if traefik_log_file | length > 0 %}
+log:
+  filePath: "{{ traefik_log_file }}"
+{% else %}
+log: {}
+{% endif %}
+{% endif %}
+
+{% if traefik_enable_access_log %}
+{% if traefik_access_log_file | length > 0 %}
+accessLog:
+  filePath: "{{ traefik_access_log_file }}"
+{% else %}
+accessLog: {}
+{% endif %}
+{% endif %}
+
+
+#######
+# Api #
+#######
+
+api:
+  dashboard: true

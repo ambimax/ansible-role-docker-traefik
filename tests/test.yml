@@ -3,8 +3,9 @@
   remote_user: root
 
   vars:
-    traefik_docker_domain: localhost.local
-    traefik_acme_email: travis@example.com
+    traefik_docker_domain: localhost
+    traefik_hostname: localhost
+    traefik_https: false
 
   roles:
     - role_under_test
