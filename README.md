@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ambimax/ansible-role-docker-traefik.svg?branch=master)](https://travis-ci.org/ambimax/ansible-role-docker-traefik)
 
-Installs traefik for docker on Debian/Ubuntu linux servers.
+Installs traefik v2 for docker on Debian/Ubuntu linux servers.
 
 ## Requirements
 
