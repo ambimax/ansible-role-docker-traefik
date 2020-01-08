@@ -7,26 +7,25 @@ http:
       entryPoints: [http]
       middlewares:
         - https-redirect
-​
+
     api-secure:
-      rule: Host(`{{ traefik_hostname }}`)
-      tls:
-        certResolver: le
-      service: api@internal
-      entryPoints: [https]
-{% if traefik_users_basic_auth is defined and (traefik_users_basic_auth | length > 0) %}
-      middlewares:
-        - auth
-{% endif %}
 {% else %}
     api:
+{% endif %}
       rule: Host(`{{ traefik_hostname }}`)
+{% if traefik_https %}
+      tls:
+        certResolver: le
+{% endif %}
       service: api@internal
+{% if traefik_https %}
+      entryPoints: [https]
+{% else %}
       entryPoints: [http]
+{% endif %}
 {% if traefik_users_basic_auth is defined and (traefik_users_basic_auth | length > 0) %}
       middlewares:
         - auth
-{% endif %}
 {% endif %}
 
   middlewares:
@@ -36,7 +35,7 @@ http:
         scheme: https
 {% endif %}
 
-{% if traefik_users_basic_auth is defined and (traefik_users_basic_auth | length > 0) %}
+{% if traefik_users_basic_auth is defined and (traefik_users_basic_auth | length > 0) %}
     auth:
       basicAuth:
         users:
