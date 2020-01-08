@@ -31,11 +31,14 @@ script:
   # Check versions
   - ${DOCKER} curl localhost/dashboard/
   - ${DOCKER} curl localhost
+  - ${DOCKER} curl localhost:8080
 
 
 after_failure:
   - ${DOCKER} curl localhost
-  - ${DOCKER} cat /etc/traefik/traefik.toml
+  - ${DOCKER} curl localhost:8080
+  - ${DOCKER} cat /etc/traefik/traefik.yml
+  - ${DOCKER} cat /etc/traefik/provider.yml
 
 
 notifications:
