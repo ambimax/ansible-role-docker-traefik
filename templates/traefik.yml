@@ -34,21 +34,11 @@ certificatesResolvers:
     acme:
       email: "{{ traefik_acme_email }}"
       storage: "{{ traefik_acme_storage }}"
-{% if traefik_onhostrule %}
-      # onHostRule: true
-{% endif %}
       httpChallenge:
         entryPoint: http
 {% if traefik_acme_staging %}
       caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
 {% endif %}
-#       domains:
-# {% for domain in traefik_acme_domains %}
-#         - main: "{{ domain.domain }}"
-# {% if domain.sans is defined and domain.sans | length %}
-#           sans: [{% for san in domain.sans %}"{{ san }}"{% if not loop.last %}, {% endif %}{% endfor %}]
-# {% endif %}
-# {% endfor %}
 {% endif %}
 
 

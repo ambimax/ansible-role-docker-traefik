@@ -33,7 +33,6 @@ traefik_access_log_file: ""
 traefik_networks:
   - traefik
 traefik_network_scope: swarm
-traefik_onhostrule: true
 traefik_state: started
 traefik_default_volumes:
   - "/var/run/docker.sock:/var/run/docker.sock"
@@ -50,7 +49,6 @@ traefik_docker_swarmmode_refreshseconds: 15
 
 traefik_acme_email: ''
 traefik_acme_storage: '{{ traefik_dir }}/acme.json'
-traefik_acme_domains: []
 traefik_acme_staging: true
 ```
 
@@ -59,7 +57,6 @@ traefik_acme_staging: true
 ```
 traefik_acme_email: ''
 traefik_acme_storage: '{{ traefik_dir }}/acme.json'
-traefik_acme_domains: []
 traefik_acme_staging: true
 ```
 
