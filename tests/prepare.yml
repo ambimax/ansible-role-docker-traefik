@@ -3,13 +3,11 @@
   remote_user: root
 
   vars:
+    #docker
     docker_install: true
-
-  pre_tasks:
-    - name: Install curl
-      apt:
-        pkg: curl
-        update_cache: true
+    docker_compose_install: true
+    docker_machine_install: true
+    docker_swarm_init: true
 
   roles:
-    - tschifftner.docker
+    - ambimax.docker

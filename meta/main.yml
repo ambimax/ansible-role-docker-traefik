@@ -3,10 +3,10 @@ dependencies: []
 
 galaxy_info:
   author: Tobias Schifftner
-  description: Installs traefik for docker on Debian/Ubuntu linux servers.
+  description: Installs traefik on docker swarm on Debian/Ubuntu linux servers.
   company: ambimax® GmbH
   license: MIT
-  role_name: traefik-docker
+  role_name: docker_traefik
   min_ansible_version: 2.5
   platforms:
   - name: Debian
