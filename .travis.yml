@@ -29,7 +29,8 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check versions
-  - ${DOCKER} curl localhost/dashboard/ | grep 'Found'
+  - ${DOCKER} curl localhost/dashboard/
+  - ${DOCKER} curl localhost
 
 
 after_failure:
