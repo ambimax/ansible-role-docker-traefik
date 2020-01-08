@@ -39,6 +39,14 @@
     owner: "{{ traefik_user }}"
     group: "{{ traefik_group }}"
 
+- name: Adding providers.yml file
+  template:
+    src: providers.yml
+    dest: "{{ traefik_dir }}/providers.yml"
+    mode: 0600
+    owner: "{{ traefik_user }}"
+    group: "{{ traefik_group }}"
+
 - name: Remove old traefik.toml file
   file:
     path: "{{ traefik_dir }}/traefik.toml"
@@ -54,10 +62,6 @@
   docker_container:
     hostname: traefik
     image: "{{ traefik_image }}"
-    labels:
-      traefik.backend: traefik
-      traefik.frontend.rule: "Host:{{ traefik_hostname }}"
-      traefik.port: "8080"
     name: "{{traefik_container_name}}"
     ports:
       - "80:80"

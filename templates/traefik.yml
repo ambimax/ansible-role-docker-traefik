@@ -9,18 +9,6 @@ entryPoints:
     address: ":443"
 {% endif %}
 
-#############
-# Dashboard #
-#############
-
-  traefik:
-    address: ":8080"
-{% if traefik_users_basic_auth | length %}
-    auth:
-      basic:
-        users: [{% for user in traefik_users_basic_auth %}"{{ user }}"{% if not loop.last %}, {% endif %}{% endfor %}]
-{% endif %}
-
 
 ######################
 # https certificates #
@@ -33,15 +21,6 @@ tls:
     - certFile = "{{ cert.CertFile }}"
       keyFile = "{{ cert.KeyFile }}"
 {% endfor %}
-{% endif %}
-
-
-{% if traefik_https and traefik_https_redirect %}
-# http:
-#   middlewares:
-#     https-redirect:
-#       redirectscheme:
-#         scheme: "https"
 {% endif %}
 
 
@@ -90,6 +69,9 @@ providers:
     swarmModeRefreshSeconds: {{traefik_docker_swarmmode_refreshseconds}}
 {% endif %}
 
+  file:
+    filename: "{{ traefik_dir }}/providers.yml"
+
 
 ###########
 # Logging #
@@ -98,18 +80,22 @@ providers:
 logLevel: "{{ traefik_log_level }}"
 debug: {{ traefik_debug | lower }}
 
+{% if traefik_enable_log %}
 {% if traefik_log_file | length > 0 %}
 log:
   filePath: "{{ traefik_log_file }}"
 {% else %}
 log: {}
 {% endif %}
+{% endif %}
 
+{% if traefik_enable_access_log %}
 {% if traefik_access_log_file | length > 0 %}
 accessLog:
   filePath: "{{ traefik_access_log_file }}"
 {% else %}
 accessLog: {}
+{% endif %}
 {% endif %}
 
 
@@ -118,5 +104,4 @@ accessLog: {}
 #######
 
 api:
-  insecure: true
   dashboard: true
