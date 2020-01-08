@@ -13,8 +13,10 @@ http:
     api:
 {% endif %}
       rule: Host(`{{ traefik_hostname }}`)
+{% if traefik_https %}
       tls:
         certResolver: le
+{% endif %}
       service: api@internal
 {% if traefik_https %}
       entryPoints: [https]
