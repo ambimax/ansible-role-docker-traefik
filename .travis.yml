@@ -29,11 +29,11 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check versions
-  - ${DOCKER} curl localhost:8080/dashboard/ | grep 'Traefik'
+  - ${DOCKER} curl localhost/dashboard/ | grep 'Traefik'
 
 
 after_failure:
-  - ${DOCKER} curl localhost:8080
+  - ${DOCKER} curl localhost
   - ${DOCKER} cat /etc/traefik/traefik.toml
 
 
