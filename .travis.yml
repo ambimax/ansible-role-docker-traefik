@@ -29,7 +29,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check versions
-  - ${DOCKER} curl localhost/dashboard/ | grep 'Traefik'
+  - ${DOCKER} curl localhost/dashboard/ | grep 'Found'
 
 
 after_failure:
