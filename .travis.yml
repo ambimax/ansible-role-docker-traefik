@@ -38,7 +38,7 @@ after_failure:
   - ${DOCKER} curl localhost
   - ${DOCKER} curl localhost:8080
   - ${DOCKER} cat /etc/traefik/traefik.yml
-  - ${DOCKER} cat /etc/traefik/provider.yml
+  - ${DOCKER} cat /etc/traefik/providers.yml
 
 
 notifications:
