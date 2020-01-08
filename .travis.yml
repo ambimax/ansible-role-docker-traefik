@@ -33,10 +33,10 @@ script:
 
 
 after_failure:
-  - ${DOCKER} curl localhost
-  - ${DOCKER} curl localhost/dashboard/
-  - ${DOCKER} curl https://localhost
-  - ${DOCKER} curl https://localhost/dashboard/
+  - ${DOCKER} curl --insecure --location localhost
+  - ${DOCKER} curl --insecure --location localhost/dashboard/
+  - ${DOCKER} curl --insecure --location https://localhost
+  - ${DOCKER} curl --insecure --location https://localhost/dashboard/
   - ${DOCKER} cat /etc/traefik/traefik.yml
   - ${DOCKER} cat /etc/traefik/providers.yml
 
