@@ -29,7 +29,7 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check versions
-  - ${DOCKER} curl --insecure --location localhost/dashboard/ | grep "Found"
+  - ${DOCKER} curl --insecure --location localhost/dashboard/ | grep "Traefik UI"
 
 
 after_failure:
