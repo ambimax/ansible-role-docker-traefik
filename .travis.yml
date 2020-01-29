@@ -29,12 +29,14 @@ script:
   - ${PWD}/tests/test.sh
 
   # Check versions
-  - ${DOCKER} curl localhost/dashboard/ | grep "Traefik UI"
+  - ${DOCKER} curl --insecure --location localhost/dashboard/ | grep "Traefik UI"
 
 
 after_failure:
-  - ${DOCKER} curl localhost
-  - ${DOCKER} curl localhost:8080
+  - ${DOCKER} curl --insecure --location localhost
+  - ${DOCKER} curl --insecure --location localhost/dashboard/
+  - ${DOCKER} curl --insecure --location https://localhost
+  - ${DOCKER} curl --insecure --location https://localhost/dashboard/
   - ${DOCKER} cat /etc/traefik/traefik.yml
   - ${DOCKER} cat /etc/traefik/providers.yml
 
